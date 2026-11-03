@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#191b20">
+<meta name="description" content="Ton chronomètre Tabata personnel : exercices, repos, cycles et récupération.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mon Tabata">
+<title>Mon Tabata — Chronomètre</title>
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="preload" href="./fonts/BebasNeue-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="./style.css?v=5">
+<script type="module" src="./app.mjs?v=5"></script>
+</head>
+<body>
+<svg class="svg-defs" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="i-settings" viewBox="0 0 24 24"><path d="m9.5 3-.7 2.2-1.6.9L5 5.7 3 9l1.5 1.8v2.4L3 15l2 3.3 2.2-.4 1.6.9.7 2.2h4.9l.7-2.2 1.6-.9 2.2.4 2-3.3-1.5-1.8v-2.4L21 9l-2-3.3-2.2.4-1.6-.9L14.5 3Z"/><circle cx="12" cy="12" r="3.4"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.2 9a8.2 8.2 0 1 1 .2 6M4 3.8V9h5.2"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8Z" fill="currentColor" stroke="none"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5v14M17 5v14" stroke-width="4"/></symbol>
+<symbol id="i-next" viewBox="0 0 24 24"><path d="m5 6 6 6-6 6m8-12 6 6-6 6"/></symbol>
+<symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+<symbol id="i-timer" viewBox="0 0 24 24"><circle cx="12" cy="14" r="8"/><path d="M12 10v5m-3-13h6m-3 0v4m6.4 1.6 1.8-1.8"/></symbol>
+<symbol id="i-sliders" viewBox="0 0 24 24"><path d="M5 3v7m0 5v6m7-18v2m0 5v11m7-18v12m0 5v1M2 10h6m1-5h6m1 10h6"/></symbol>
+</defs></svg>
+<main id="app-shell" class="app-shell" data-view="training" data-phase="preparation">
+<section id="training-screen" class="training-screen" aria-label="Écran d’entraînement">
+<header class="training-header">
+<button id="settings-open" class="icon-button" type="button" aria-label="Ouvrir les réglages"><svg><use href="#i-settings"/></svg></button>
+<div class="session-heading"><h1>Tabata</h1><span id="total-remaining" aria-label="Temps total restant">15:40</span><span class="total-caption">temps total restant</span></div>
+<button id="reset" class="icon-button reset-button" type="button" aria-label="Arrêter et réinitialiser la séance" title="Arrêter et réinitialiser" disabled><svg><use href="#i-reset"/></svg></button>
+</header>
+<section id="timer-card" class="phase-panel" data-phase="preparation" aria-labelledby="phase-label">
+<div class="phase-status"><span class="status-line"></span><span id="run-state" role="status">Prêt</span><span class="status-line"></span></div>
+<h2 id="phase-label">Préparation</h2>
+<div class="time-wrap"><div id="clock" class="clock" role="timer" aria-label="Temps restant dans la phase : 00:10"><span id="clock-minutes">00</span><span class="timer-separator" aria-hidden="true">:</span><span id="clock-seconds">10</span></div></div>
+<div class="phase-actions"><button id="add-five" class="extend-button" type="button" aria-label="Ajouter 5 secondes à la phase en cours" disabled>+5 s</button></div>
+<div class="phase-track"><div id="phase-progress"></div></div>
+<p id="error" class="error training-error" role="alert" hidden></p>
+</section>
+<section id="next-panel" class="next-panel" data-phase="exercise" aria-label="Prochaine phase">
+<div class="next-copy"><span class="next-kicker">À suivre</span><h3 id="next-label">Exercice</h3></div><strong id="next-time">00:20</strong><button id="skip" class="icon-button skip-button" type="button" aria-label="Passer à la phase suivante" disabled><svg><use href="#i-next"/></svg></button>
+</section>
+<div class="control-deck">
+<div class="remaining rounds"><strong id="round-count">8</strong><span>Rounds<br>restants</span></div>
+<div class="play-control"><button id="start" class="play-button" type="button" aria-label="Commencer la séance"><svg id="play-icon"><use href="#i-play"/></svg><svg id="pause-icon" hidden><use href="#i-pause"/></svg><svg id="replay-icon" hidden><use href="#i-reset"/></svg></button><span id="start-label">Commencer</span></div>
+<div class="remaining cycles"><strong id="cycle-count">3</strong><span>Cycles<br>restants</span></div>
+</div>
+<div class="session-footer"><div class="session-footer-labels"><span id="position-label">3 cycles · 8 rounds</span><span id="progress-label">0 %</span></div><div id="session-progress" class="session-track" role="progressbar" aria-label="Progression de la séance" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="progress"></div></div></div>
+</section>
+<section id="settings-screen" class="settings-screen" aria-label="Réglages de la séance" hidden>
+<header class="settings-header"><button id="settings-cancel" class="text-button" type="button">Annuler</button><h2>Tabata</h2><button id="settings-save" class="text-button save-button" type="submit" form="settings-form">Enregistrer</button></header>
+<div class="settings-content" id="settings-content">
+<div class="section-title"><span>Intervalles</span><span id="settings-duration">15:40</span></div>
+<form id="settings-form"><fieldset id="settings-fields"><legend class="sr-only">Configurer la séance</legend>
+<input id="preparation" type="hidden" value="10"><input id="exercise" type="hidden" value="20"><input id="rest" type="hidden" value="10"><input id="rounds" type="hidden" value="8"><input id="cycles" type="hidden" value="3"><input id="cycleRest" type="hidden" value="60"><input id="recovery" type="hidden" value="120">
+<button class="setting-row" type="button" data-edit="preparation" id="edit-preparation"><span class="setting-copy"><span class="setting-name"><i class="phase-dot preparation"></i>Préparation</span><span class="setting-description">Une seule fois avant de commencer</span></span><span class="setting-value" data-value="preparation">00:10</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<button class="setting-row" type="button" data-edit="exercise" id="edit-exercise"><span class="setting-copy"><span class="setting-name"><i class="phase-dot exercise"></i>Exercice</span><span class="setting-description">Durée de chaque effort</span></span><span class="setting-value" data-value="exercise">00:20</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<button class="setting-row" type="button" data-edit="rest" id="edit-rest"><span class="setting-copy"><span class="setting-name"><i class="phase-dot rest"></i>Repos</span><span class="setting-description">Entre les exercices du cycle</span></span><span class="setting-value" data-value="rest">00:10</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<button class="setting-row" type="button" data-edit="rounds" id="edit-rounds"><span class="setting-copy"><span class="setting-name"><i class="phase-dot recovery"></i>Rounds</span><span class="setting-description">Exercices dans chaque cycle</span></span><span class="setting-value" data-value="rounds">8</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<button class="setting-row" type="button" data-edit="cycles" id="edit-cycles"><span class="setting-copy"><span class="setting-name"><i class="phase-dot preparation"></i>Cycles</span><span class="setting-description">Nombre de séries de rounds</span></span><span class="setting-value" data-value="cycles">3</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<button class="setting-row" type="button" data-edit="cycleRest" id="edit-cycleRest"><span class="setting-copy"><span class="setting-name"><i class="phase-dot cycleRest"></i>Repos entre cycles</span><span class="setting-description">Remplace le repos du dernier round</span></span><span class="setting-value" data-value="cycleRest">01:00</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<button class="setting-row" type="button" data-edit="recovery" id="edit-recovery"><span class="setting-copy"><span class="setting-name"><i class="phase-dot recovery"></i>Récupération</span><span class="setting-description">Après le tout dernier exercice</span></span><span class="setting-value" data-value="recovery">02:00</span><svg class="chevron"><use href="#i-chevron"/></svg></button>
+<div class="section-title secondary-title"><span>Signaux sonores</span></div>
+<label class="sound-option"><span><strong>Décompte de fin de phase</strong><small>Bips pendant les 3 dernières secondes</small></span><input id="countdown" type="checkbox" checked></label>
+<div class="presets"><button id="preset-demo" class="preset" type="button">Essai rapide · 45 s</button><button id="preset-default" class="preset" type="button">Exemple 20 / 10</button></div>
+</fieldset><p id="config-error" class="error" role="alert" hidden></p></form>
+<p id="settings-note" class="settings-note">Les réglages sont conservés sur cet appareil après enregistrement.</p>
+<details class="help"><summary>Utilisation et informations</summary><p>Une durée à zéro ignore la préparation ou le repos correspondant. Les exercices durent au moins une seconde. Durée initiale maximale : 60 minutes. Le bouton +5 s prolonge la phase en cours sans changer les autres rounds.</p><p>Ouvre la séance dans Safari. Le maintien de l’écran et le son écran verrouillé suivent le fonctionnement déjà testé sur ton iPhone. Un appel ou une autre lecture audio peut interrompre le son. Recharger la page remet la séance à zéro.</p><p>Pour ajouter une icône : Partager → Sur l’écran d’accueil. Le mode hors connexion n’est pas encore prévu.</p><p><span id="wake-dot" class="dot"></span> <span id="wake">Maintien de l’écran au lancement</span></p><p><a href="./test-iphone.html">Retrouver le premier test iPhone</a></p><audio id="audio" controls preload="auto" playsinline aria-label="Sons de la séance"></audio></details>
+<p class="private-note">Personnel · Aucun paiement dans l’application</p>
+</div>
+</section>
+<nav class="bottom-nav" aria-label="Navigation principale"><button id="nav-training" class="nav-item is-active" type="button" aria-current="page"><svg><use href="#i-timer"/></svg><span>Entraînement</span></button><button id="nav-settings" class="nav-item" type="button"><svg><use href="#i-sliders"/></svg><span>Réglages</span></button></nav>
+<dialog id="value-editor" class="value-editor" aria-labelledby="editor-title"><form id="editor-form"><div class="sheet-handle" aria-hidden="true"></div><span class="editor-kicker">Réglage de la séance</span><h2 id="editor-title">Préparation</h2><p id="editor-description">Une seule fois avant de commencer</p><div id="duration-editor" class="duration-editor"><label><input id="editor-minutes" type="number" inputmode="numeric" min="0" max="30" step="1" value="0"><span>minutes</span></label><span class="editor-colon" aria-hidden="true">:</span><label><input id="editor-seconds" type="number" inputmode="numeric" min="0" max="59" step="1" value="10"><span>secondes</span></label></div><div id="count-editor" class="count-editor" hidden><label><span id="editor-count-label">Nombre</span><input id="editor-number" type="number" inputmode="numeric" min="1" max="50" step="1" value="1"></label></div><p id="editor-error" class="error" role="alert" hidden></p><div class="editor-actions"><button id="editor-cancel" type="button">Annuler</button><button class="editor-confirm" type="submit">Valider</button></div></form></dialog>
+<p id="announcement" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+</main>
+</body>
+</html>
